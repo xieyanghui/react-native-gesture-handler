@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   GestureType,
   HandlerCallbacks,
@@ -42,8 +42,7 @@ import { Platform } from 'react-native';
 import type RNGestureHandlerModuleWeb from '../../RNGestureHandlerModule.web';
 import { onGestureHandlerEvent } from './eventReceiver';
 import { RNRenderer } from '../../RNRenderer';
-import { isNewWebImplementationEnabled } from '../../EnableNewWebImplementation';
-import GestureHandlerRootViewContext from '../../GestureHandlerRootViewContext';
+import { isExperimentalWebImplementationEnabled } from '../../EnableExperimentalWebImplementation';
 
 declare const global: {
   isFormsStackingContext: (node: unknown) => boolean | null; // JSI function
@@ -68,9 +67,6 @@ export type GestureConfigReference = {
   firstExecution: boolean;
   useReanimatedHook: boolean;
 };
-
-const scheduleUpdate =
-  Platform.OS === 'web' ? requestAnimationFrame : setImmediate;
 
 function convertToHandlerTag(ref: GestureRef): number {
   if (typeof ref === 'number') {
@@ -151,9 +147,9 @@ function attachHandlers({
     preparedGesture.firstExecution = false;
   }
 
-  // use scheduleUpdate to extract handlerTags, because all refs should be initialized
+  // use setImmediate to extract handlerTags, because all refs should be initialized
   // when it's ran
-  scheduleUpdate(() => {
+  setImmediate(() => {
     if (!mountedRef.current) {
       return;
     }
@@ -171,9 +167,9 @@ function attachHandlers({
     registerHandler(handler.handlerTag, handler, handler.config.testId);
   }
 
-  // use scheduleUpdate to extract handlerTags, because all refs should be initialized
+  // use setImmediate to extract handlerTags, because all refs should be initialized
   // when it's ran
-  scheduleUpdate(() => {
+  setImmediate(() => {
     if (!mountedRef.current) {
       return;
     }
@@ -258,10 +254,10 @@ function updateHandlers(
     }
   }
 
-  // use scheduleUpdate to extract handlerTags, because when it's ran, all refs should be updated
+  // use setImmediate to extract handlerTags, because when it's ran, all refs should be updated
   // and handlerTags in BaseGesture references should be updated in the loop above (we need to wait
   // in case of external relations)
-  scheduleUpdate(() => {
+  setImmediate(() => {
     if (!mountedRef.current) {
       return;
     }
@@ -607,13 +603,6 @@ interface GestureDetectorState {
   forceReattach: boolean;
 }
 export const GestureDetector = (props: GestureDetectorProps) => {
-  const rootViewContext = useContext(GestureHandlerRootViewContext);
-  if (__DEV__ && !rootViewContext) {
-    throw new Error(
-      'GestureDetector must be used as a descendant of GestureHandlerRootView. Otherwise the gestures will not be recognized. See https://docs.swmansion.com/react-native-gesture-handler/docs/installation for more details.'
-    );
-  }
-
   const gestureConfig = props.gesture;
 
   if (props.userSelect) {
@@ -635,7 +624,7 @@ export const GestureDetector = (props: GestureDetectorProps) => {
     onGestureHandlerEvent: (e: HandlerStateChangeEvent<unknown>) => {
       onGestureHandlerEvent(e.nativeEvent);
     },
-    onGestureHandlerStateChange: isNewWebImplementationEnabled()
+    onGestureHandlerStateChange: isExperimentalWebImplementationEnabled()
       ? (e: HandlerStateChangeEvent<unknown>) => {
           onGestureHandlerEvent(e.nativeEvent);
         }

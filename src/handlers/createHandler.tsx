@@ -28,7 +28,6 @@ import { ValueOf } from '../typeUtils';
 import { isFabric, isJestEnv, tagMessage } from '../utils';
 import { ActionType } from '../ActionType';
 import { PressabilityDebugView } from './PressabilityDebugView';
-import GestureHandlerRootViewContext from '../GestureHandlerRootViewContext';
 
 const UIManagerAny = UIManager as any;
 
@@ -169,7 +168,6 @@ export default function createHandler<
     HandlerState
   > {
     static displayName = name;
-    static contextType = GestureHandlerRootViewContext;
 
     private handlerTag: number;
     private config: Record<string, unknown>;
@@ -400,13 +398,6 @@ export default function createHandler<
     }
 
     render() {
-      if (__DEV__ && !this.context) {
-        throw new Error(
-          name +
-            ' must be used as a descendant of GestureHandlerRootView. Otherwise the gestures will not be recognized. See https://docs.swmansion.com/react-native-gesture-handler/docs/installation for more details.'
-        );
-      }
-
       let gestureEventHandler = this.onGestureHandlerEvent;
       // Another instance of https://github.com/microsoft/TypeScript/issues/13995
       type OnGestureEventHandlers = {

@@ -156,8 +156,7 @@ export interface SwipeableProps
    * */
   renderLeftActions?: (
     progressAnimatedValue: AnimatedInterpolation,
-    dragAnimatedValue: AnimatedInterpolation,
-    swipeable: Swipeable
+    dragAnimatedValue: AnimatedInterpolation
   ) => React.ReactNode;
   /**
    *
@@ -443,13 +442,6 @@ export default class Swipeable extends Component<
     this.animateRow(this.currentOffset(), -rightWidth);
   };
 
-  reset = () => {
-    const { dragX, rowTranslation } = this.state;
-    dragX.setValue(0);
-    rowTranslation.setValue(0);
-    this.setState({ rowState: 0 });
-  };
-
   render() {
     const { rowState } = this.state;
     const { children, renderLeftActions, renderRightActions } = this.props;
@@ -463,7 +455,7 @@ export default class Swipeable extends Component<
           // it for some reason
           { transform: [{ translateX: this.leftActionTranslate! }] },
         ]}>
-        {renderLeftActions(this.showLeftAction!, this.transX!, this)}
+        {renderLeftActions(this.showLeftAction!, this.transX!)}
         <View
           onLayout={({ nativeEvent }) =>
             this.setState({ leftWidth: nativeEvent.layout.x })

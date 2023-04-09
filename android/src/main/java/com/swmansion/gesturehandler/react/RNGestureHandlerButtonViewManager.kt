@@ -233,6 +233,7 @@ class RNGestureHandlerButtonViewManager : ViewGroupManager<ButtonViewGroup>(), R
         background = layerDrawable
       }
     }
+
   private fun createSelectableDrawable(): Drawable? {
       // TODO: remove once support for RN 0.63 is dropped, since 0.64 minSdkVersion is 21
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {

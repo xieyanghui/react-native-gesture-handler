@@ -1,6 +1,27 @@
 {
   "main": "../lib/commonjs/jestUtils/index",
   "module": "../lib/module/jestUtils/index",
-  "react-native": "../src/jestUtils/index",
-  "types": "../lib/typescript/jestUtils/index.d.ts"
+  "react-native": {
+    "../lib/commonjs/jestUtils/index": "../src/jestUtils/index",
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  },
+  "types": "../lib/typescript/jestUtils/index.d.ts",
+  "browser": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify",
+    "../lib/commonjs/jestUtils/index.js": "../src/jestUtils/index"
+  }
 }
